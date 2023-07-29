@@ -198,20 +198,19 @@ engine = subprocess.Popen(
 
 
 def put(command):
-    print('\nyou:\n\t'+command)
-    engine.stdin.write(command+'\n')
+    print(command+'\n')
 l = ""
 def get():
     # using the 'isready' command (engine has to answer 'readyok')
     # to indicate current last line of stdout
     engine.stdin.write('isready\n')
-    print('\nengine:')
     while True:
         text = engine.stdout.readline().strip()
         if text == 'readyok':
             break
         if text != '':
-            print(text)
+            pass
+            #print(text)
         if text.split(' ')[0] == 'bestmove':
             ai.add_move(text.split(' ')[1])
             m = ai.make_move()
