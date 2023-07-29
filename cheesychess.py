@@ -185,9 +185,11 @@ while True:
     
 
 
+
 """
+import subprocess
 engine = subprocess.Popen(
-    'opponent.exe',
+    'cmd.exe',
     universal_newlines=True,
     stdin=subprocess.PIPE,
     stdout=subprocess.PIPE,
@@ -239,8 +241,6 @@ get()
 
 
 # im bad at uci protocol no judge pls
-# u can dm me at cheeesey101 to fix anything because i really dont know how to implement uci
-"""
-            
-            
- 
+# u can dm me at cheeesey101 to fix anything because i really dont know how to implement uci    
+#"""
+
