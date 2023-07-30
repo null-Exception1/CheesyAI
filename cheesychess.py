@@ -1,6 +1,4 @@
-import re, time
-from itertools import count
-from collections import namedtuple as nmd
+import re
 import chess
 import random
 from board import *
@@ -83,20 +81,12 @@ class ChessAI:
                 return 0
 
         entry = self.tp_score.get((position, depth, root), Entry(-upperbound, upperbound))
-        if entry.lower >= gamma and (not root or self.tp_move.get(position) is not None):
-            return entry.lower
+  
         if entry.upper < gamma:
             return entry.upper
 
         
         # avg bound 
-        best = -upperbound
-        for move, score in moves():
-            best = max(best, score)
-            if best >= gamma:
-                if len(self.tp_move) > maxttsize: self.tp_move.clear()
-                self.tp_move[position] = move
-                break
         if best < gamma and best < 0 and depth > 0:
             is_dead = lambda position: any(position.value(m) >= lowerbound for m in position.generator())
             if all(is_dead(position.move(m)) for m in position.generator()):
