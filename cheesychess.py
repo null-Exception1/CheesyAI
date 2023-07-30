@@ -12,25 +12,7 @@ class ChessAI:
         # chess module was too slow
         b = ' rnbqkbnr\n'
         w = ' RNBQKBNR\n'
-        
-        self.hist = [Board((
-        ' '+' '*8+'\n'
-        ' '+' '*8+'\n'
-        ' rnbqkbnr\n'
-        ' '+'p'*8+'\n' 
-        ' '+'.'*8+'\n'
-        ' '+'.'*8+'\n'
-        ' '+'.'*8+'\n'
-        ' '+'.'*8+'\n'
-        ' '+'P'*8+'\n'
-        ' RNBQKBNR\n'
-        ' '+' '*8+'\n'
-        ' '+' '*8+'\n'
     ), 0, (True,True), (True,True), 0, 0)]
-        self.tp_score = {}
-        self.tp_move = {}
-        self.history = set()
-        self.nodes = 0
     def make_move(self) -> str:
         a = 'abcdefgh'
         mymove = self.playnext(self.hist)
@@ -81,10 +63,6 @@ class ChessAI:
             while lower < upper - 13:
                 gamma = (lower+upper+1)//2
                 score = self.bound(position, gamma, depth)
-                if score >= gamma:
-                    lower = score
-                if score < gamma:
-                    upper = score
             self.bound(position, lower, depth)
             
             yield depth, self.tp_move.get(position), self.tp_score.get((position, depth, True)).lower
@@ -110,20 +88,7 @@ class ChessAI:
         if entry.upper < gamma:
             return entry.upper
 
-        # had to actually define the move system because i was making it myself
-        def moves():
-            
-            if depth > 0 and not root and any(c in position.bd for c in 'RBNQ'):
-                yield None, -self.bound(Board(position.bd[::-1].swapcase(), -position.score,position.bc, position.castlingrights, 0, 0), 1-gamma, depth-3, root=False)
-            if depth == 0:
-                yield None, position.score
-            killer = self.tp_move.get(position)
-            if killer and (depth > 0 or position.value(killer) >= 219):
-                yield killer, -self.bound(position.move(killer), 1-gamma, depth-1, root=False)
-            for move in sorted(position.generator(), key=position.value, reverse=True):
-                if depth > 0 or position.value(move) >= 219:
-                    yield move, -self.bound(position.move(move), 1-gamma, depth-1, root=False)
-
+        
         # avg bound 
         best = -upperbound
         for move, score in moves():
@@ -139,12 +104,6 @@ class ChessAI:
             position.bd[::-1].swapcase(), -position.score,
             position.bc, position.castlingrights, 0, 0))
                 best = -upperbound if in_check else 0
-
-        if len(self.tp_score) > maxttsize: self.tp_score.clear()
-        if best >= gamma:
-            self.tp_score[position, depth, root] = Entry(best, entry.upper)
-        if best < gamma:
-            self.tp_score[position, depth, root] = Entry(entry.lower, best)
 
         return best
 """
