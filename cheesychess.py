@@ -87,13 +87,12 @@ class ChessAI:
 
         
         # avg bound 
-        if best < gamma and best < 0 and depth > 0:
-            is_dead = lambda position: any(position.value(m) >= lowerbound for m in position.generator())
-            if all(is_dead(position.move(m)) for m in position.generator()):
-                in_check = is_dead(Board(
-            position.bd[::-1].swapcase(), -position.score,
-            position.bc, position.castlingrights, 0, 0))
-                best = -upperbound if in_check else 0
+        
+        if all(is_dead(position.move(m)) for m in position.generator()):
+            in_check = is_dead(Board(
+        position.bd[::-1].swapcase(), -position.score,
+        position.bc, position.castlingrights, 0, 0))
+            best = -upperbound if in_check else 0
 
         return best
 """
