@@ -82,8 +82,6 @@ class ChessAI:
 
         entry = self.tp_score.get((position, depth, root), Entry(-upperbound, upperbound))
   
-        if entry.upper < gamma:
-            return entry.upper
 
         
         # avg bound 
